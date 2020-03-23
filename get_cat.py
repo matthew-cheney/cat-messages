@@ -15,7 +15,7 @@ def get_cat():
 
     r = requests.get(cat_url)
 
-    all_cat_filenames = glob.glob('cat_images/*')
+    all_cat_filenames = glob.glob('cat_images/cat_*')
 
     if r.headers.get('Content-Type') == 'image/jpeg':
         with open(f'cat_images/cat_{len(all_cat_filenames):05d}.jpg', 'wb') as f:

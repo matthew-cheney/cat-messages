@@ -41,7 +41,7 @@ message.attach(MIMEText(body, "html"))
 
 get_cat()
 
-cat_filenames = glob('cat_images/*')
+cat_filenames = glob('cat_images/cat_*')
 
 filename = f"cat_images/cat_{len(cat_filenames) - 1:05d}.jpg"  # In same directory as script
 
