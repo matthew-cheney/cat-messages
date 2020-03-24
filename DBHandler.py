@@ -68,6 +68,15 @@ def verify_email(db_name, email):
     finally:
         conn.close()
 
+def remove_email(db_name, email):
+    try:
+        conn = sqlite3.connect(db_name)
+        c = conn.cursor()
+        c.execute("DELETE FROM emails WHERE email=?",
+                  (email,))
+        conn.commit()
+    finally:
+        conn.close()
 
 # add_email('db/cat_emails.db', 'Skylie', 'Cheney', 'skyliecheney@gmail.com')
 # res = get_all_emails('db/cat_emails.db')

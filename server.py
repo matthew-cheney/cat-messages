@@ -45,7 +45,7 @@ def verify_email(email, verify_key):
             # Key is correct
             try:
                 DBHandler.verify_email(db_filename, email)
-                return 'verified'
+                return f'verified'
             except EmailNotFoundError:
                 return 'already verified'
         else:
@@ -54,6 +54,18 @@ def verify_email(email, verify_key):
     except EmailNotFoundError:
         return 'already verified'
 
+@app.route('/unsubscribe', methods=['GET', 'POST'])
+def unsubscribe():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        DBHandler.remove_email(db_filename, email)
+        return f'unsubscribed {email}'
+    else:
+        return render_template('unsubscribe.html')
+
+@app.route('/send-cat')
+def send_cat():
+    pass
 
 """
 @app.route('/book/<book_id>/<chapter_number>')

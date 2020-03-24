@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Unsubscribe</h2>
+
+<form method="POST" action="unsubscribe">
+    <input type="text" placeholder="email" name="email"><br/>
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock content %}
