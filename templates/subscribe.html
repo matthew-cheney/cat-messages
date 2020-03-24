@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Subscribe</h2>
+
+<form method="POST" action="subscribe">
+    <input type="text" placeholder="first name" name="first_name"><br/>
+    <input type="text" placeholder="last name" name="last_name"><br/>
+    <input type="text" placeholder="email" name="email"><br/>
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock content %}
