@@ -19,12 +19,10 @@ print(f'establishing connections to {db_filename}')
 conn = sqlite3.connect(db_filename)
 c = conn.cursor()
 
-create_tables_string = """
-CREATE TABLE emails (date_added text, first_name text, last_name text, email text)
-"""
-
 print('creating table(s)')
-c.execute(create_tables_string)
+c.execute("CREATE TABLE emails (date_added text, first_name text, last_name text, email text)")
+c.execute("CREATE TABLE unverified_emails (date_added text, first_name text, last_name text, email text, verify_key text)")
+
 conn.commit()
 
 print('done')

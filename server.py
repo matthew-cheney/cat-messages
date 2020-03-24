@@ -1,10 +1,13 @@
 import sqlite3
+import uuid
 
 from flask import Flask, render_template, request, redirect, url_for
 import DBHandler
-from verify_email import verify_email
+import Emailer
 from json.decoder import JSONDecodeError
 import re
+
+from CustomErrors import EmailNotFoundError
 
 app = Flask(__name__)
 
@@ -29,7 +32,28 @@ def add_user():
             return 'invalid credentials'
         if re.findall(r'[^@]+@[^@]+\.[^@]+', email) == []:
             return "invalid email"
+        verify_key = uuid.uuid4().hex
+        DBHandler.add_unverified_email(db_filename, first_name, last_name, email, verify_key)
+        Emailer.send_verification_email(db_filename, email)
         return redirect(url_for('home'))
+
+@app.route('/verify/<email>/<verify_key>')
+def verify_email(email, verify_key):
+    try:
+        person = DBHandler.get_person_by_email_unverified(db_filename, email)
+        if person[4] == verify_key:
+            # Key is correct
+            try:
+                DBHandler.verify_email(db_filename, email)
+                return 'verified'
+            except EmailNotFoundError:
+                return 'already verified'
+        else:
+            # Key is incorrect
+            return 'incorrect key'
+    except EmailNotFoundError:
+        return 'already verified'
+
 
 """
 @app.route('/book/<book_id>/<chapter_number>')
