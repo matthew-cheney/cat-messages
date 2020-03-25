@@ -31,6 +31,14 @@ def get_all_unverified_emails(db_name):
     conn.close()
     return db_result
 
+def get_all_emails(db_name):
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute("SELECT * FROM emails")
+    db_result = c.fetchall()
+    conn.close()
+    return [x[3] for x in db_result]
+
 def add_unverified_email(db_name, first_name, last_name, email, verify_key):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
