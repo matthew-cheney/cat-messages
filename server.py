@@ -2,7 +2,7 @@ import uuid
 
 from flask import Flask, render_template, request, redirect, url_for
 
-from settings import DB_PATH
+from daily-cat/settings import DB_PATH
 from utils import DBHandler, Emailer
 import re
 

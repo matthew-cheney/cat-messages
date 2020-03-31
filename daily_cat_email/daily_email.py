@@ -8,8 +8,8 @@ from email.mime.text import MIMEText
 from glob import glob
 from datetime import datetime
 
-from daily_cat_email.get_cat import get_cat
-from daily_cat_email.get_quote import get_quote
+from get_cat import get_cat
+from get_quote import get_quote
 from utils import DBHandler
 from settings import *
 
