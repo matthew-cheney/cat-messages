@@ -1,17 +1,16 @@
-import email, smtplib, ssl
+import smtplib
 
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from glob import glob
 from datetime import datetime
 
-from get_cat import get_cat
-from get_quote import get_quote
-from utils import DBHandler
-from settings import *
+from daily_cat_email.get_cat import get_cat
+from daily_cat_email.get_quote import get_quote
+from dailycat import utils
+from daily_cat_email.settings import *
 
 import os
 dirname = os.path.dirname(__file__)
@@ -33,7 +32,7 @@ body = f"""
 
 # with open('gmail_email.txt', 'r') as f:
 #     sender_email = f.read()
-receiver_emails = DBHandler.get_all_emails(DB_PATH)
+receiver_emails = utils.DBHandler.get_all_emails(DB_PATH)
 # password = input("Type your password and press enter:")
 password = EMAIL_PASSWORD
 

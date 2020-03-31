@@ -7,10 +7,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import datetime
 
-from utils import DBHandler
-from errors.CustomErrors import EmailNotFoundError
-from daily_cat_email.get_cat import get_cat
-from daily_cat_email.get_quote import get_quote
+from dailycat.settings import SENDER_EMAIL, EMAIL_PASSWORD
+from dailycat.utils import DBHandler
+from dailycat.errors.CustomErrors import EmailNotFoundError
+from daily_cat_email import get_cat
+from daily_cat_email import get_quote
 
 
 def send_verification_email(db_name, email):
@@ -31,14 +32,9 @@ def send_verification_email(db_name, email):
           </body>
           </html>"""
 
-    with open('../daily_cat_email/gmail_email.txt', 'r') as f:
-        sender_email = f.read()
-    with open('../daily_cat_email/gmail_password.txt', 'r') as f:
-        password = f.read()
-
     receiver_email = person[3]
     message = MIMEMultipart("alternative")
-    message["From"] = sender_email
+    message["From"] = SENDER_EMAIL
     message["Subject"] = subject
     message["To"] = receiver_email
 
@@ -49,9 +45,9 @@ def send_verification_email(db_name, email):
 
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email, password)
+        server.login(SENDER_EMAIL, EMAIL_PASSWORD)
         text = message.as_string()
-        server.sendmail(sender_email, receiver_email, text)
+        server.sendmail(SENDER_EMAIL, receiver_email, text)
 
     return True
 
@@ -76,15 +72,10 @@ def send_daily_cat(db_name, receiver_emails):
     # with open('gmail_email.txt', 'r') as f:
     #     sender_email = f.read()
     # password = input("Type your password and press enter:")
-    with open(os.path.join(dirname, 'daily_cat_email/gmail_password'),
-              'r') as f:
-        password = f.read().split('\n')[0]
-
-    sender_email = 'matthew@cheneycreations.com'
 
     # Create a multipart message and set headers
     message = MIMEMultipart()
-    message["From"] = sender_email
+    message["From"] = SENDER_EMAIL
     message["Subject"] = subject
 
     # Add body to email
@@ -113,11 +104,11 @@ def send_daily_cat(db_name, receiver_emails):
 
     s = smtplib.SMTP('cheneycreations.com')
     s.ehlo()
-    s.login(sender_email, password)
+    s.login(SENDER_EMAIL, EMAIL_PASSWORD)
     for receiver_email in receiver_emails:
         if receiver_email == '':
             continue
         message["To"] = receiver_email
         text = message.as_string()
-        s.sendmail(sender_email, receiver_email, text)
+        s.sendmail(SENDER_EMAIL, receiver_email, text)
     s.quit()

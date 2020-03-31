@@ -4,7 +4,7 @@ import glob
 
 import os
 
-from settings import PATH_TO_DAILY_CAT
+from daily_cat_email.settings import PATH_TO_DAILY_CAT
 
 dirname = os.path.dirname(__file__)
 

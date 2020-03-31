@@ -1,6 +1,6 @@
 import os
 
-from server import app
+from dailycat import app
 
 """from apscheduler.schedulers.background import BackgroundScheduler
 scheduler = BackgroundScheduler()

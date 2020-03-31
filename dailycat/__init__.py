@@ -2,7 +2,7 @@ import uuid
 
 from flask import Flask, render_template, request, redirect, url_for
 
-from daily-cat/settings import DB_PATH
+from dailycat.settings import DB_PATH
 from dailycat.utils import DBHandler, Emailer
 import re
 
@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
+    print(DB_PATH)
     all_emails = DBHandler.get_all_emails(DB_PATH)
     return render_template('index.html', all_emails=all_emails)
 

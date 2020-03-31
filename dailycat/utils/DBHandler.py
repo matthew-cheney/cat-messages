@@ -1,7 +1,7 @@
 import sqlite3
 import datetime
 
-from errors.CustomErrors import EmailNotFoundError
+from dailycat.errors.CustomErrors import EmailNotFoundError
 
 
 def get_all_emails(db_name):

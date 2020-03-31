@@ -1,4 +1,4 @@
-from settings import PATH_TO_QUOTES, PATH_TO_QUOTES_COUNTER
+from daily_cat_email.settings import PATH_TO_QUOTES, PATH_TO_QUOTES_COUNTER
 
 
 def get_quote():
