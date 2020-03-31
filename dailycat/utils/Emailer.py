@@ -44,11 +44,16 @@ def send_verification_email(db_name, email):
     message.attach(part1)
 
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(SENDER_EMAIL, EMAIL_PASSWORD)
-        text = message.as_string()
-        server.sendmail(SENDER_EMAIL, receiver_email, text)
 
+
+    s = smtplib.SMTP('cheneycreations.com')
+    s.ehlo()
+    s.login(SENDER_EMAIL, EMAIL_PASSWORD)
+    s.login(SENDER_EMAIL, EMAIL_PASSWORD)
+    text = message.as_string()
+    s.sendmail(SENDER_EMAIL, receiver_email, text)
+    s.quit()
+    print(f'sent confirmation email to {receiver_email}')
     return True
 
 def send_daily_cat(db_name, receiver_emails):
