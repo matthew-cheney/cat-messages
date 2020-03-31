@@ -1,3 +1,4 @@
+import os
 import smtplib
 import ssl
 from email import encoders
@@ -6,10 +7,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import datetime
 
-import DBHandler
-from CustomErrors import EmailNotFoundError
-from get_cat import get_cat
-from get_quote import get_quote
+from utils import DBHandler
+from errors.CustomErrors import EmailNotFoundError
+from daily_cat_email.get_cat import get_cat
+from daily_cat_email.get_quote import get_quote
 
 
 def send_verification_email(db_name, email):
@@ -30,9 +31,9 @@ def send_verification_email(db_name, email):
           </body>
           </html>"""
 
-    with open('gmail_email.txt', 'r') as f:
+    with open('../daily_cat_email/gmail_email.txt', 'r') as f:
         sender_email = f.read()
-    with open('gmail_password.txt', 'r') as f:
+    with open('../daily_cat_email/gmail_password.txt', 'r') as f:
         password = f.read()
 
     receiver_email = person[3]
@@ -55,32 +56,31 @@ def send_verification_email(db_name, email):
     return True
 
 def send_daily_cat(db_name, receiver_emails):
-    get_cat()
-    """people = []
-    for receiver_email in receiver_emails:
-        try:
-            person = DBHandler.get_person_by_email_unverified(db_name, receiver_email)
-            people.append(person)
-        except EmailNotFoundError:
-            continue"""
+    dirname = os.path.dirname(__file__)
+
+    DB_NAME = os.path.join(dirname, 'db/cat_emails.db')
 
     subject = f"Cat of the Day - {datetime.datetime.today().strftime('%Y-%m-%d')}"
+
     quote = get_quote()
 
-    html = f"""
+    body = f"""
     <html>
     <body>
     <p>{quote[0]}<br/>
     <i>{quote[1]}</i></p>
-    <p><a href="localhost:5000/unsubscribe">Unsubscribe</a>
     </body>
     </html>
     """
 
-    with open('gmail_email.txt', 'r') as f:
-        sender_email = f.read()
-    with open('gmail_password.txt', 'r') as f:
-        password = f.read()
+    # with open('gmail_email.txt', 'r') as f:
+    #     sender_email = f.read()
+    # password = input("Type your password and press enter:")
+    with open(os.path.join(dirname, 'daily_cat_email/gmail_password'),
+              'r') as f:
+        password = f.read().split('\n')[0]
+
+    sender_email = 'matthew@cheneycreations.com'
 
     # Create a multipart message and set headers
     message = MIMEMultipart()
@@ -88,9 +88,9 @@ def send_daily_cat(db_name, receiver_emails):
     message["Subject"] = subject
 
     # Add body to email
-    message.attach(MIMEText(html, "html"))
+    message.attach(MIMEText(body, "html"))
 
-    filename = 'daily_cat/cat.jpg'
+    filename = get_cat()
 
     # Open PDF file in binary mode
     with open(filename, "rb") as attachment:
@@ -111,14 +111,13 @@ def send_daily_cat(db_name, receiver_emails):
     # Add attachment to message and convert message to string
     message.attach(part)
 
-    # Log in to server using secure context and send email
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email, password)
-        for receiver_email in receiver_emails:
-            if receiver_email == '':
-                continue
-            message["To"] = receiver_email
-            text = message.as_string()
-            server.sendmail(sender_email, receiver_email, text)
-
+    s = smtplib.SMTP('cheneycreations.com')
+    s.ehlo()
+    s.login(sender_email, password)
+    for receiver_email in receiver_emails:
+        if receiver_email == '':
+            continue
+        message["To"] = receiver_email
+        text = message.as_string()
+        s.sendmail(sender_email, receiver_email, text)
+    s.quit()

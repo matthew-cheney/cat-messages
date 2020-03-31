@@ -2,6 +2,12 @@ import requests
 import json
 import glob
 
+import os
+
+from settings import PATH_TO_DAILY_CAT
+
+dirname = os.path.dirname(__file__)
+
 def get_cat():
     url = "https://api.thecatapi.com/v1/images/search?mime_types=jpg"
     headers = {'user': 'matthew@cheneycreations.com'}
@@ -21,9 +27,11 @@ def get_cat():
         print("something else went vey wrong!")
         exit(1)
 
+
     if r.headers.get('Content-Type') == 'image/jpeg':
-        with open(f'daily_cat/cat.jpg', 'wb') as f:
+        with open(PATH_TO_DAILY_CAT, 'wb') as f:
             f.write(r.content)
+        return PATH_TO_DAILY_CAT
     else:
         print(r.headers.get('Content-Type'))
         return get_cat()
@@ -77,7 +85,7 @@ def main():
         if event in (None, 'Cancel'):	# if user closes window or clicks cancel
             break
         if event in ('Get Cat'):
-            get_cat()
+            get_cat_old()
             show_cat()
 
     window.close()

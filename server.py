@@ -1,21 +1,19 @@
-import sqlite3
 import uuid
 
 from flask import Flask, render_template, request, redirect, url_for
-import DBHandler
-import Emailer
-from json.decoder import JSONDecodeError
+
+from settings import DB_PATH
+from utils import DBHandler, Emailer
 import re
 
-from CustomErrors import EmailNotFoundError
+from errors.CustomErrors import EmailNotFoundError
+
 
 app = Flask(__name__)
 
-db_filename = 'db/cat_emails.db'
-
 @app.route('/')
 def home():
-    all_emails = DBHandler.get_all_emails(db_filename)
+    all_emails = DBHandler.get_all_emails(DB_PATH)
     return render_template('index.html', all_emails=all_emails)
 
 @app.route('/subscribe', methods=['GET', 'POST'])
@@ -33,18 +31,18 @@ def add_user():
         if re.findall(r'[^@]+@[^@]+\.[^@]+', email) == []:
             return "invalid email"
         verify_key = uuid.uuid4().hex
-        DBHandler.add_unverified_email(db_filename, first_name, last_name, email, verify_key)
-        Emailer.send_verification_email(db_filename, email)
+        DBHandler.add_unverified_email(DB_PATH, first_name, last_name, email, verify_key)
+        Emailer.send_verification_email(DB_PATH, email)
         return redirect(url_for('home'))
 
 @app.route('/verify/<email>/<verify_key>')
 def verify_email(email, verify_key):
     try:
-        person = DBHandler.get_person_by_email_unverified(db_filename, email)
+        person = DBHandler.get_person_by_email_unverified(DB_PATH, email)
         if person[4] == verify_key:
             # Key is correct
             try:
-                DBHandler.verify_email(db_filename, email)
+                DBHandler.verify_email(DB_PATH, email)
                 return f'verified'
             except EmailNotFoundError:
                 return 'already verified'
@@ -58,7 +56,7 @@ def verify_email(email, verify_key):
 def unsubscribe():
     if request.method == 'POST':
         email = request.form.get('email')
-        DBHandler.remove_email(db_filename, email)
+        DBHandler.remove_email(DB_PATH, email)
         return f'unsubscribed {email}'
     else:
         return render_template('unsubscribe.html')
