@@ -1,9 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-cats home
-{% for email in all_emails %}
-{{ email }}<br/>
-{% endfor %}
-
+<h1>Welcome to DailyCat!</h1>
+<h2>To receive your own daily dose of feline cuteness, subscribe below.</h2>
+<a href="/subscribe">Subscribe</a>
 {% endblock content %}
