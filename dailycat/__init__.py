@@ -44,7 +44,7 @@ def verify_email(email, verify_key):
             # Key is correct
             try:
                 DBHandler.verify_email(DB_PATH, email)
-                return f'verified'
+                return f'{email} verified. You may now close this page.'
             except EmailNotFoundError:
                 return 'already verified'
         else:
@@ -58,7 +58,7 @@ def unsubscribe():
     if request.method == 'POST':
         email = request.form.get('email')
         DBHandler.remove_email(DB_PATH, email)
-        return f'unsubscribed {email}'
+        return f'unsubscribed {email}. You may now close this page.'
     else:
         return render_template('unsubscribe.html')
 
