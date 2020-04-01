@@ -22,6 +22,7 @@ c = conn.cursor()
 print('creating table(s)')
 c.execute("CREATE TABLE emails (date_added text, first_name text, last_name text, email text)")
 c.execute("CREATE TABLE unverified_emails (date_added text, first_name text, last_name text, email text, verify_key text)")
+c.execute("CREATE TABLE daily_emails (date text, quote text, image_url text)")
 
 conn.commit()
 
