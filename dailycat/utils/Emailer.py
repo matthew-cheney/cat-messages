@@ -20,7 +20,7 @@ def send_verification_email(db_name, email):
     except EmailNotFoundError:
         return False
 
-    verification_link = f'http://localhost:5000/verify/{person[3]}/{person[4]}'
+    verification_link = f'https://www.cheneycreations.com/daily-cat/verify/{person[3]}/{person[4]}'
     # verification_link = "http://www.realpython.com"
     subject = f"DailyCat Verification Email"
     html= f"""<html>
